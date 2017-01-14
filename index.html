@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <!-- jquery for Bootstrap -->
+  <script
+      src="https://code.jquery.com/jquery-3.1.1.min.js"
+      integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+      crossorigin="anonymous"></script>
+
+  <!-- bootstrap -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js'></script>
+
+  <!-- font awesome -->
+  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <!-- Vue.js script source -->
+  <script src="https://unpkg.com/vue/dist/vue.js"></script>
+
+  <style>
+    .center {
+      text-align: center;
+    }
+    .large1 { font-size: 20px; }
+    .large2 { font-size: 25px; }
+    .large3 { font-size: 30px; }
+    .large4 { font-size: 35px; }
+    .large5 { font-size: 40px; }
+    .large6 { font-size: 45px; }
+    
+    .bizLarge1 { font-size: 30px; }
+    .bizLarge2 { font-size: 37px; }
+    .bizLarge3 { font-size: 44px; }
+    .bizLarge4 { font-size: 55px; }
+    .bizLarge5 { font-size: 65px; }
+    .bizLarge6 { font-size: 75px; }
+    
+    .lotSize0 { display: none; }
+    .lotSize1 { font-size: 20px; }
+    .lotSize2 { font-size: 30px; }
+    .lotSize3 { font-size: 40px; }
+    
+    .hide { display: none; }
+  </style>
+  
+  <title>Document</title>
+</head>
+<body>
+<div class="container">
+  <div id="app">
+    <div class="row text-center" style="margin-bottom: 30px;">
+      <h1>Business Plan</h1>
+    </div>
+    <div class="col-sm-6">
+      <div class="row center">
+        <div class="row" style="height: 100px;">
+          <button class="btn btn-success bizLarge1" id="business">Business Idea</button>
+        </div>
+        <div class="row" style="height: 300px; line-height: 300px;">
+          <img src="up_arrow.png" alt="green up arrow money" style="height: 200px;">
+        </div>
+        <div class="row" style="height: 200px; margin-top: 50px;">
+          <button onclick="addFriend()" id="friends" class="btn btn-primary large1" v-bind:class="cssClass">Friends</button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-sm-6">
+      <div class="row" style="height: 200px; margin-top: 50px;">
+        <div class="col-sm-6 center">
+          <button onclick="earnIncome()" class="btn btn-warning hidden" id="lotBtnOne">Lottery</button>
+        </div>
+        <div class="col-sm-6 center">
+          <button onclick="earnIncome()" class="btn btn-warning hidden" id="lotBtnTwo">Lottery</button>
+        </div>
+      </div>
+      
+      <br>
+      <div class="row center">
+        <h2>Net Worth</h2>
+        <div class="well">
+          <h2 id="netWorthNumber">$80,000</h2>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-sm-12 center">
+      <h3>Cost of Living Per Year</h3>
+      <div class="well">
+        <h3>$50,000</h3>
+        <!--<input type="text" v-on:input="cssClass=$event.target.value">-->
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+//  new Vue({
+//    el: '#app',
+//    data: {
+//      cssClass: ''
+//    }
+//  });
+
+// set friend count number
+  let friendCount = 0;
+  
+  function addFriend() {
+    friendCount += 1;
+    
+//  when friendCount is above 2, add event listener to the businessBtn to make lot size buttons appear
+    if (friendCount > 2) {
+      document.getElementById('business').addEventListener('click', showLotBtn)
+    }
+  }
+  
+  setInterval(decreaseFriend, 3500);
+  function decreaseFriend() {
+    if (friendCount > 0) {
+      friendCount -= 1;
+    }
+
+    removeLotBtn();
+  }
+  
+//  make lottery button appear when friend count is above certain number
+  let lotBtnOne = document.getElementById('lotBtnOne');
+  let lotBtnTwo = document.getElementById('lotBtnTwo');
+  
+  function showLotBtn() {
+    let selectedLotBtnSize = '';
+    
+    if (friendCount > 2) {
+//      randomly choose lotsize betwen 1 and 3
+//      alert(Math.floor((Math.random() * 10) + 1));
+      randomNum10 = Math.floor((Math.random() * 10) + 1);
+      
+      if (randomNum10 <= 3) {
+        selectedLotBtnSize = 'lotSize0';
+      } else if (7 > randomNum10 && randomNum10 > 3) {
+        selectedLotBtnSize = 'lotSize1';
+      } else if (9 > randomNum10 && randomNum10 >= 7) {
+        selectedLotBtnSize = 'lotSize2';
+      } else if (11 > randomNum10 && randomNum10 >= 9) {
+        selectedLotBtnSize = 'lotSize3';
+      }
+      
+//      choose left or right to show lot button.
+      leftRightNum = Math.floor((Math.random() * 10) +1);
+      leftRight = '';
+      
+      if (leftRightNum > 5) {
+        leftRight = 'right';  
+      } else if (leftRightNum <= 5) {
+        leftRight = 'left';
+      }
+      
+      
+      if (leftRight == 'right') {
+        lotBtnTwo.className = 'btn btn-warning ' + selectedLotBtnSize;
+      } else if (leftRight == 'left') {
+        lotBtnOne.className = 'btn btn-warning ' + selectedLotBtnSize;
+      }
+    }
+  }
+  
+  function removeLotBtn() {
+//    detect current lot button size through getting the class
+//    alert(lotBtnOne.className);
+    let btnOneClassStr = lotBtnOne.className;
+    let lotBtnOneSize = btnOneClassStr.charAt(23);
+    let newLotBtnOneSize;
+    let newBtnOneClassStr;
+    
+    if (lotBtnOneSize > 0) {
+      newLotBtnOneSize = lotBtnOneSize - 1;
+      newBtnOneClassStr = 'btn btn-warning lotSize' + newLotBtnOneSize;
+      lotBtnOne.className = newBtnOneClassStr;
+    }
+
+    let btnTwoClassStr = lotBtnTwo.className;
+    let lotBtnTwoSize = btnTwoClassStr.charAt(23);
+    let newLotBtnTwoSize;
+    let newBtnTwoClassStr;
+
+    if (lotBtnTwoSize > 0) {
+      newLotBtnTwoSize = lotBtnTwoSize - 1;
+      newBtnTwoClassStr = 'btn btn-warning lotSize' + newLotBtnTwoSize;
+      lotBtnTwo.className = newBtnTwoClassStr;
+    }
+  }
+  
+  let netWorth = 80000;
+  let commaNetWorth;
+  
+  function earnIncome() {
+//    earn between $100,000 and $200,000 each click
+//    generate a random number between 100,000 and 200,000
+    let randomIncome = Math.floor(Math.random() * 10000 + 10000) * 10;
+    netWorth = parseFloat(netWorth) + randomIncome;
+    commaNetWorth = netWorth.toLocaleString();
+    
+    document.getElementById('netWorthNumber').innerHTML = '$' + commaNetWorth;
+  }
+  
+//  decrease net worth by set amount determined by annual life expenses
+  let lifeExpenses = 10000;
+  
+  setInterval(expenses, 1000);
+
+  let commaDecreasedNetWorth;
+  
+  function expenses() {
+    netWorth = netWorth - 5000;
+    commaDecreasedNetWorth = netWorth.toLocaleString();
+
+    document.getElementById('netWorthNumber').innerHTML = '$' + commaDecreasedNetWorth;
+  }
+  
+//  make friends button bigger and smaller by changing css class on setInterval in javascript
+  setInterval(changeFriendBtnSize, 800);
+
+  let upDown = '';
+  function changeFriendBtnSize() {
+    let friendsBtn = document.getElementById('friends');
+    if (friendsBtn.classList.contains('large1')) {
+      upDown = 'up';
+      friendsBtn.classList.toggle('large1');
+      friendsBtn.classList.toggle('large2');
+    } else if (friendsBtn.classList.contains('large2')) {
+      friendsBtn.classList.toggle('large2');
+      if (upDown == 'up') {
+        friendsBtn.classList.toggle('large3');
+      } else {
+        friendsBtn.classList.toggle('large1');
+      }
+    } else if (friendsBtn.classList.contains('large3')) {
+      friendsBtn.classList.toggle('large3');
+      if (upDown == 'up') {
+        friendsBtn.classList.toggle('large4');
+      } else {
+        friendsBtn.classList.toggle('large2');
+      }
+    } else if (friendsBtn.classList.contains('large4')) {
+      friendsBtn.classList.toggle('large4');
+      if (upDown == 'up') {
+        friendsBtn.classList.toggle('large5');
+      } else {
+        friendsBtn.classList.toggle('large3');
+      }
+    } else if (friendsBtn.classList.contains('large5')) {
+      friendsBtn.classList.toggle('large5');
+      console.log(upDown);
+      if (upDown == 'up') {
+        friendsBtn.classList.toggle('large6');
+      } else {
+        friendsBtn.classList.toggle('large4');
+      }
+    } else if (friendsBtn.classList.contains('large6')) {
+      upDown = 'down';
+      friendsBtn.classList.toggle('large6');
+      friendsBtn.classList.toggle('large5');
+    }
+  }
+
+// change size of business button
+  setInterval(changeBusinessBtnSize, 600);
+  
+  let bizUpDown = '';
+  function changeBusinessBtnSize() {
+    let businessBtn = document.getElementById('business');
+    if (businessBtn.classList.contains('bizLarge1')) {
+      bizUpDown = 'up';
+      businessBtn.classList.toggle('bizLarge1');
+      businessBtn.classList.toggle('bizLarge2');
+    } else if (businessBtn.classList.contains('bizLarge2')) {
+      businessBtn.classList.toggle('bizLarge2');
+      if (bizUpDown == 'up') {
+        businessBtn.classList.toggle('bizLarge3');
+      } else {
+        businessBtn.classList.toggle('bizLarge1');        
+      }
+    } else if (businessBtn.classList.contains('bizLarge3')) {
+      businessBtn.classList.toggle('bizLarge3');
+      
+      if (friendCount > 2) {
+        bizUpDown = 'up';
+      } else if (friendCount <= 2) {
+        bizUpDown = 'down';
+      }
+      
+      if (bizUpDown == 'up') {
+        businessBtn.classList.toggle('bizLarge4');
+      } else {
+        businessBtn.classList.toggle('bizLarge2');
+      }
+    } else if (businessBtn.classList.contains('bizLarge4')) {
+      businessBtn.classList.toggle('bizLarge4');
+      if (bizUpDown == 'up') {
+        businessBtn.classList.toggle('bizLarge5');
+      } else {
+        businessBtn.classList.toggle('bizLarge3');
+      }
+    } else if (businessBtn.classList.contains('bizLarge5')) {
+      businessBtn.classList.toggle('bizLarge5');
+      if (bizUpDown == 'up') {
+        businessBtn.classList.toggle('bizLarge6');
+      } else {
+        businessBtn.classList.toggle('bizLarge4');
+      }
+    } else if (businessBtn.classList.contains('bizLarge6')) {
+      bizUpDown = 'down';
+      businessBtn.classList.toggle('bizLarge6');
+      businessBtn.classList.toggle('bizLarge5');
+    }
+  }
+</script>
+</body>
+</html>
